@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rlDrawerItemLevel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/drawer_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_placeholder"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/drawer_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:fontFamily="sans-serif-light"
+            android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+            android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+            android:layout_toLeftOf="@+id/drawer_counter"
+            android:layout_toRightOf="@+id/drawer_icon"
+            android:singleLine="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/drawer_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/counter_bg"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/Black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlDrawerHeaderLevel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/drawer_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="20dp"
+            android:textColor="@color/Black"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:background="@drawable/list_section_divider"
+            android:singleLine="true" />
+    </RelativeLayout>
+</RelativeLayout>

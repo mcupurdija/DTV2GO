@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">DTV2GO</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_video">VideoActivity</string>
+
+    <string-array name="nav_drawer_items">
+        <item>Logo</item>
+        <item>Korisnik</item>
+        <item>Glavni meni</item>
+        <item>Lista kanala</item>
+        <item>Omiljeni kanali</item>
+        <item>Ostalo</item>
+        <item>Podešavanja</item>
+    </string-array>
+
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_id</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_list</item>
+        <item>@drawable/ic_favourites</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_settings</item>
+    </array>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+</resources>
