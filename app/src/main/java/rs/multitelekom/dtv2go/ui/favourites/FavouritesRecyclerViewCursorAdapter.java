@@ -1,4 +1,4 @@
-package rs.multitelekom.dtv2go.ui.channels;
+package rs.multitelekom.dtv2go.ui.favourites;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -16,13 +16,13 @@ import rs.multitelekom.dtv2go.R;
 import rs.multitelekom.dtv2go.adapter.RecyclerViewCursorAdapter;
 import rs.multitelekom.dtv2go.util.UIUtils;
 
-public class ChannelsRecyclerViewCursorAdapter extends RecyclerViewCursorAdapter<ChannelsRecyclerViewCursorAdapter.ViewHolder> {
+public class FavouritesRecyclerViewCursorAdapter extends RecyclerViewCursorAdapter<FavouritesRecyclerViewCursorAdapter.ViewHolder> {
 
     private Context mContext;
     private OnItemClickListener mItemClickListener;
     private OnLongClickListener mItemLongClickListener;
 
-    public ChannelsRecyclerViewCursorAdapter(android.content.Context context, Cursor cursor) {
+    public FavouritesRecyclerViewCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
         mContext = context;
     }
@@ -84,8 +84,8 @@ public class ChannelsRecyclerViewCursorAdapter extends RecyclerViewCursorAdapter
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
 
-        viewHolder.tvItemsNo.setText(cursor.getString(ChannelsFragment.ChannelsQuery.CHANNEL_NAME));
-        String icon_uri = cursor.getString(ChannelsFragment.ChannelsQuery.CHANNEL_ICON_URI);
+        viewHolder.tvItemsNo.setText(cursor.getString(FavouritesFragment.FavouritesQuery.CHANNEL_NAME));
+        String icon_uri = cursor.getString(FavouritesFragment.FavouritesQuery.CHANNEL_ICON_URI);
         if (!TextUtils.isEmpty(icon_uri)) {
 
             viewHolder.ivItemsImage.setImageBitmap(null);

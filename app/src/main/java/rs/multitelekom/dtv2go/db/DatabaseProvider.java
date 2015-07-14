@@ -19,6 +19,9 @@ public class DatabaseProvider extends ContentProvider {
     private static final int CHANNELS = 10;
     private static final int CHANNELS_ID = 11;
     private static final int CHANNELS_SEARCH_NAME = 12;
+    private static final int FAVOURITES = 20;
+    private static final int FAVOURITES_ID = 21;
+    private static final int FAVOURITES_SEARCH_NAME = 22;
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -28,6 +31,10 @@ public class DatabaseProvider extends ContentProvider {
         uriMatcher.addURI(authority, "Channels/#", CHANNELS_ID);
         uriMatcher.addURI(authority, "Channels/name/#", CHANNELS_SEARCH_NAME);
         uriMatcher.addURI(authority, "Channels/name/*", CHANNELS_SEARCH_NAME);
+        uriMatcher.addURI(authority, "Favourites", FAVOURITES);
+        uriMatcher.addURI(authority, "Favourites/#", FAVOURITES_ID);
+        uriMatcher.addURI(authority, "Favourites/name/#", FAVOURITES_SEARCH_NAME);
+        uriMatcher.addURI(authority, "Favourites/name/*", FAVOURITES_SEARCH_NAME);
     }
 
     @Override
@@ -59,6 +66,19 @@ public class DatabaseProvider extends ContentProvider {
                 queryBuilder.setTables(Tables.CHANNELS);
                 queryBuilder.appendWhere(DatabaseContract.Channels.CHANNEL_NAME + " LIKE '%" + query + "%'");
                 break;
+            case FAVOURITES:
+                queryBuilder.setTables(Tables.FAVOURITES);
+                break;
+            case FAVOURITES_ID:
+                query = uri.getLastPathSegment();
+                queryBuilder.setTables(Tables.FAVOURITES);
+                queryBuilder.appendWhere(DatabaseContract.Favourites._ID + "=" + query);
+                break;
+            case FAVOURITES_SEARCH_NAME:
+                query = uri.getLastPathSegment();
+                queryBuilder.setTables(Tables.FAVOURITES);
+                queryBuilder.appendWhere(DatabaseContract.Favourites.CHANNEL_NAME + " LIKE '%" + query + "%'");
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -83,9 +103,13 @@ public class DatabaseProvider extends ContentProvider {
         long id;
         switch (match) {
             case CHANNELS:
-                id = database.insertWithOnConflict(Tables.CHANNELS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                id = database.insertOrThrow(Tables.CHANNELS, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return DatabaseContract.Channels.buildIdUri(String.valueOf(id));
+            case FAVOURITES:
+                id = database.insertOrThrow(Tables.FAVOURITES, null, values);
+                getContext().getContentResolver().notifyChange(uri, null);
+                return DatabaseContract.Favourites.buildIdUri(String.valueOf(id));
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -104,6 +128,10 @@ public class DatabaseProvider extends ContentProvider {
                 rows = database.delete(Tables.CHANNELS, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return rows;
+            case FAVOURITES:
+                rows = database.delete(Tables.FAVOURITES, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                return rows;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -120,6 +148,10 @@ public class DatabaseProvider extends ContentProvider {
         switch (match) {
             case CHANNELS:
                 rows = database.update(Tables.CHANNELS, values, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                return rows;
+            case FAVOURITES:
+                rows = database.update(Tables.FAVOURITES, values, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return rows;
             default:

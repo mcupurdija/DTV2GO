@@ -1,10 +1,11 @@
-package rs.multitelekom.dtv2go;
+package rs.multitelekom.dtv2go.ui.video;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import io.vov.vitamio.widget.MediaController;
+import rs.multitelekom.dtv2go.R;
 
 public class CustomMediaController extends MediaController {
 

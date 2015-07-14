@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="channel_list_contextual">
+        <item>Otvori kanal</item>
+        <item>Dodaj u omiljene</item>
+    </string-array>
+
+    <string-array name="favourites_list_contextual">
+        <item>Otvori kanal</item>
+        <item>Obriši iz omiljenih</item>
+    </string-array>
+
+</resources>

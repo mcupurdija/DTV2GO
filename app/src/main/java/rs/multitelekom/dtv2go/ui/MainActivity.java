@@ -2,6 +2,7 @@ package rs.multitelekom.dtv2go.ui;
 
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -12,19 +13,31 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.PendingRequestListener;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 import rs.multitelekom.dtv2go.R;
 import rs.multitelekom.dtv2go.adapter.NavDrawerListAdapter;
+import rs.multitelekom.dtv2go.db.DatabaseContract;
 import rs.multitelekom.dtv2go.model.NavDrawerItem;
 import rs.multitelekom.dtv2go.ui.channels.ChannelsFragment;
 import rs.multitelekom.dtv2go.ui.favourites.FavouritesFragment;
+import rs.multitelekom.dtv2go.util.DateUtils;
+import rs.multitelekom.dtv2go.util.DialogUtils;
+import rs.multitelekom.dtv2go.util.SharedPreferencesUtils;
+import rs.multitelekom.dtv2go.util.ToastUtils;
+import rs.multitelekom.dtv2go.ws.request.GetChannelsRequest;
 
 
 public class MainActivity extends BaseActivity {
@@ -32,12 +45,14 @@ public class MainActivity extends BaseActivity {
     private final static int WAIT_FOR_DRAWER_TO_CLOSE_DELAY = 300;
 
     private final static int DRAWER_LOGO_POSITION = 0;
-    private final static int DRAWER_USER_POSITION = 1;
-    private final static int DRAWER_MAIN_MENU_TITLE_POSITION = 2;
-    private final static int DRAWER_CHANNEL_LIST_POSITION = 3;
-    private final static int DRAWER_FAVOURITES_POSITION = 4;
+    private final static int DRAWER_MAIN_MENU_TITLE_POSITION = 1;
+    private final static int DRAWER_CHANNEL_LIST_POSITION = 2;
+    private final static int DRAWER_FAVOURITES_POSITION = 3;
+    private final static int DRAWER_VOD_POSITION = 4;
     private final static int DRAWER_OTHER_TITLE_POSITION = 5;
     private final static int DRAWER_SETTINGS_POSITION = 6;
+    private final static int DRAWER_HELP_POSITION = 7;
+    private final static int DRAWER_ABOUT_POSITION = 8;
 
     private String[] navMenuTitles;
 
@@ -50,6 +65,8 @@ public class MainActivity extends BaseActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+
+    private MaterialDialog progressDialog;
 
     private Fragment fragment;
 
@@ -74,12 +91,14 @@ public class MainActivity extends BaseActivity {
 
         navDrawerItems = new ArrayList<>();
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_LOGO_POSITION], -1, false, true));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_USER_POSITION], navMenuIcons.getResourceId(DRAWER_USER_POSITION, -1), true, false));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_MAIN_MENU_TITLE_POSITION], -1, false, true));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_CHANNEL_LIST_POSITION], navMenuIcons.getResourceId(DRAWER_CHANNEL_LIST_POSITION, -1), false, false, true, getChannelsCount()));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_FAVOURITES_POSITION], navMenuIcons.getResourceId(DRAWER_FAVOURITES_POSITION, -1), false, false, true, getFavouritesCount()));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_VOD_POSITION], navMenuIcons.getResourceId(DRAWER_VOD_POSITION, -1), false, false));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_OTHER_TITLE_POSITION], -1, false, true));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_SETTINGS_POSITION], navMenuIcons.getResourceId(DRAWER_SETTINGS_POSITION, -1), false, false));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_HELP_POSITION], navMenuIcons.getResourceId(DRAWER_HELP_POSITION, -1), false, false));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_ABOUT_POSITION], navMenuIcons.getResourceId(DRAWER_ABOUT_POSITION, -1), false, false));
 
         adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
         mDrawerList.setAdapter(adapter);
@@ -111,13 +130,54 @@ public class MainActivity extends BaseActivity {
         if (savedInstanceState == null) {
             displayView(DRAWER_CHANNEL_LIST_POSITION);
         }
+
+        updateChannels(false);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    protected void onStart() {
+        super.onStart();
+
+        getSpiceManager().addListenerIfPending(Integer.class, GetChannelsRequest.class.getSimpleName(), new GetChannelsRequestListener());
+    }
+
+    public void updateChannels(boolean forced) {
+
+        if (!forced) {
+            String lastSyncDate = SharedPreferencesUtils.getLastSyncDate(this);
+            String currentDate = DateUtils.formatDate(new Date());
+
+            if (lastSyncDate == null || !lastSyncDate.equals(currentDate)) {
+                progressDialog = new MaterialDialog.Builder(this).title("Lista kanala se ažurira").content("Molimo sačekajte...").progress(true, 0).show();
+            } else {
+                return;
+            }
+        }
+        GetChannelsRequest getChannelsRequest = new GetChannelsRequest(this, "http://www.stcable.tv/ott/android_app_list.xml");
+        getSpiceManager().execute(getChannelsRequest, GetChannelsRequest.class.getSimpleName(), DurationInMillis.ONE_MINUTE, new GetChannelsRequestListener());
+    }
+
+    private class GetChannelsRequestListener implements PendingRequestListener<Integer> {
+
+        @Override
+        public void onRequestFailure(SpiceException se) {
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
+            DialogUtils.showBasicInfoDialog(MainActivity.this, "Greška", se.getMessage());
+        }
+
+        @Override
+        public void onRequestSuccess(Integer inserted) {
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
+            ToastUtils.displayPositionedToast(MainActivity.this, "Lista kanala je uspešno ažurirana!", Gravity.CENTER);
+        }
+
+        @Override
+        public void onRequestNotFound() {
+        }
     }
 
     @Override
@@ -145,16 +205,22 @@ public class MainActivity extends BaseActivity {
     private void displayView(int position) {
 
         switch (position) {
-            case DRAWER_USER_POSITION:
-                fragment = new TestFragment();
-                break;
             case DRAWER_CHANNEL_LIST_POSITION:
                 fragment = new ChannelsFragment();
                 break;
             case DRAWER_FAVOURITES_POSITION:
                 fragment = new FavouritesFragment();
                 break;
+            case DRAWER_VOD_POSITION:
+                fragment = new TestFragment();
+                break;
             case DRAWER_SETTINGS_POSITION:
+                fragment = new TestFragment();
+                break;
+            case DRAWER_HELP_POSITION:
+                fragment = new TestFragment();
+                break;
+            case DRAWER_ABOUT_POSITION:
                 fragment = new TestFragment();
                 break;
             default:
@@ -185,17 +251,23 @@ public class MainActivity extends BaseActivity {
     }
 
     public void refreshDrawer() {
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_CHANNEL_LIST_POSITION], navMenuIcons.getResourceId(DRAWER_CHANNEL_LIST_POSITION, -1), false, false, true, getChannelsCount()));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_FAVOURITES_POSITION], navMenuIcons.getResourceId(DRAWER_FAVOURITES_POSITION, -1), false, false, true, getFavouritesCount()));
+        navDrawerItems.set(DRAWER_CHANNEL_LIST_POSITION, new NavDrawerItem(navMenuTitles[DRAWER_CHANNEL_LIST_POSITION], navMenuIcons.getResourceId(DRAWER_CHANNEL_LIST_POSITION, -1), false, false, true, getChannelsCount()));
+        navDrawerItems.set(DRAWER_FAVOURITES_POSITION, new NavDrawerItem(navMenuTitles[DRAWER_FAVOURITES_POSITION], navMenuIcons.getResourceId(DRAWER_FAVOURITES_POSITION, -1), false, false, true, getFavouritesCount()));
         adapter.notifyDataSetChanged();
     }
 
     private String getChannelsCount() {
-        return "99";
+        Cursor cursor = getContentResolver().query(DatabaseContract.Channels.CONTENT_URI, null, null, null, null);
+        int result = cursor.getCount();
+        cursor.close();
+        return String.valueOf(result);
     }
 
     private String getFavouritesCount() {
-        return "0";
+        Cursor cursor = getContentResolver().query(DatabaseContract.Favourites.CONTENT_URI, null, null, null, null);
+        int result = cursor.getCount();
+        cursor.close();
+        return String.valueOf(result);
     }
 
     @Override

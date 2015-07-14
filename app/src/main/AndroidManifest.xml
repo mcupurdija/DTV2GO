@@ -26,15 +26,23 @@
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".ui.VideoActivity"
+            android:name=".ui.video.VideoActivity"
             android:label="@string/title_activity_video" >
         </activity>
+
+        <service
+            android:name=".ws.XmlSpiceService"
+            android:exported="false" />
 
         <provider
             android:name=".db.DatabaseProvider"
             android:authorities="rs.multitelekom.dtv2go.database_provider"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.video.TestVideoActivity"
+            android:label="@string/title_activity_test_video" >
+        </activity>
     </application>
 
 </manifest>

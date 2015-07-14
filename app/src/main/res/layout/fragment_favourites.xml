@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
     android:background="@color/light_grey"
-    tools:context="rs.multitelekom.dtv2go.ui.favourites.FavouritesFragment">
+    tools:context="rs.multitelekom.dtv2go.ui.channels.ChannelsFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"

@@ -1,23 +1,26 @@
-package rs.multitelekom.dtv2go.ui;
+package rs.multitelekom.dtv2go.ui.video;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CursorAdapter;
 import android.widget.GridView;
 
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.VideoView;
-import rs.multitelekom.dtv2go.CustomMediaController;
 import rs.multitelekom.dtv2go.R;
+import rs.multitelekom.dtv2go.ui.BaseActivity;
 
 public class VideoActivity extends BaseActivity {
+
+    public static final String NAME_EXTRA_KEY = "name_extra";
+    public static final String VIDEO_URI_EXTRA_KEY = "video_uri_extra";
 
     private int mVideoLayout = 0;
 
@@ -25,20 +28,27 @@ public class VideoActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-        if (!LibsChecker.checkVitamioLibs(this))
-            return;
         setContentView(R.layout.activity_video);
 
+        String channelName = getIntent().getExtras().getString(NAME_EXTRA_KEY, null);
+        String videoUri = getIntent().getExtras().getString(VIDEO_URI_EXTRA_KEY, null);
+
+        if (!LibsChecker.checkVitamioLibs(this) || videoUri == null) {
+            finish();
+        }
+
         mVideoView = (VideoView) findViewById(R.id.surface_view);
-        mVideoView.setVideoURI(Uri.parse("http://techslides.com/demos/sample-videos/small.mp4"));
+        mVideoView.setVideoURI(Uri.parse(videoUri));
         mVideoView.setMediaController(new CustomMediaController(this));
         mVideoView.requestFocus();
 
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.setPlaybackSpeed(1.0f);
+                // TODO
             }
         });
 
@@ -55,28 +65,6 @@ public class VideoActivity extends BaseActivity {
         };
         GridView gridView = new GridView(this);
         gridView.setAdapter(adapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_video, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void changeLayout(View view) {
