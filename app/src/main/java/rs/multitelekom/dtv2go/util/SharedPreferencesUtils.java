@@ -9,6 +9,7 @@ public class SharedPreferencesUtils {
     public static final String USER_ID_KEY = "dtv2go_user_id";
     public static final String CHANNEL_HD_QUALITY_KEY = "dtv2go_hd_quality";
     public static final String LAST_SYNC_DATE = "dtv2go_last_sync_date";
+    public static final String LAST_MOVIES_SYNC_DATE = "dtv2go_last_movies_sync_date";
 
     public static void savePreferences(Context context, String key, String value) {
         SharedPreferences sp = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
@@ -56,5 +57,17 @@ public class SharedPreferencesUtils {
     public static String getLastSyncDate(Context context) {
         SharedPreferences sp = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
         return sp.getString(LAST_SYNC_DATE, null);
+    }
+
+    public static void saveLastMoviesSyncDate(Context context, String value) {
+        SharedPreferences sp = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        Editor editor = sp.edit();
+        editor.putString(LAST_MOVIES_SYNC_DATE, value);
+        editor.apply();
+    }
+
+    public static String getLastMoviesSyncDate(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        return sp.getString(LAST_MOVIES_SYNC_DATE, null);
     }
 }

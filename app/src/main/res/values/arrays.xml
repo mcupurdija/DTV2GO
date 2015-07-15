@@ -11,4 +11,17 @@
         <item>Obriši iz omiljenih</item>
     </string-array>
 
+    <string-array name="movie_genres">
+        <item>Svi žanrovi</item>
+        <item>Akcija</item>
+        <item>Avantura</item>
+        <item>Komedija</item>
+        <item>Drama</item>
+        <item>Fantazija</item>
+        <item>Horor</item>
+        <item>Misterija</item>
+        <item>Romantika</item>
+        <item>Triler</item>
+    </string-array>
+
 </resources>

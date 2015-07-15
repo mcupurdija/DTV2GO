@@ -52,6 +52,11 @@ public class Channel {
 
     @Override
     public String toString() {
-        return "Channel [id = " + id + ", streaming_url = " + streaming_url + ", caption = " + caption + ", icon_path = " + icon_path + "]";
+        return "Channel{" +
+                "id='" + id + '\'' +
+                ", streaming_url='" + streaming_url + '\'' +
+                ", caption='" + caption + '\'' +
+                ", icon_path='" + icon_path + '\'' +
+                '}';
     }
 }

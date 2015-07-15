@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/ui/MainActivity.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/ui/channels/ChannelsFragment.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/ui/favourites/FavouritesFragment.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/util/DateUtils.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/util/DialogUtils.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/util/SharedPreferencesUtils.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/util/ToastUtils.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/ws/XmlSpiceService.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/rs/multitelekom/dtv2go/ui/video/VideoActivity.java" charset="UTF-8" />
   </component>
 </project>

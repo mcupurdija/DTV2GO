@@ -9,6 +9,10 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
+import java.util.List;
+
+import rs.multitelekom.dtv2go.ui.vod.Genres;
+
 public class DatabaseProvider extends ContentProvider {
 
     private static final String TAG = "DTV2GO_DatabaseProvider";
@@ -22,6 +26,9 @@ public class DatabaseProvider extends ContentProvider {
     private static final int FAVOURITES = 20;
     private static final int FAVOURITES_ID = 21;
     private static final int FAVOURITES_SEARCH_NAME = 22;
+    private static final int MOVIES = 30;
+    private static final int MOVIES_ID = 31;
+    private static final int MOVIES_SEARCH_NAME = 32;
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -35,6 +42,10 @@ public class DatabaseProvider extends ContentProvider {
         uriMatcher.addURI(authority, "Favourites/#", FAVOURITES_ID);
         uriMatcher.addURI(authority, "Favourites/name/#", FAVOURITES_SEARCH_NAME);
         uriMatcher.addURI(authority, "Favourites/name/*", FAVOURITES_SEARCH_NAME);
+        uriMatcher.addURI(authority, "Movies", MOVIES);
+        uriMatcher.addURI(authority, "Movies/#", MOVIES_ID);
+        uriMatcher.addURI(authority, "Movies/name/#/#", MOVIES_SEARCH_NAME);
+        uriMatcher.addURI(authority, "Movies/name/*/#", MOVIES_SEARCH_NAME);
     }
 
     @Override
@@ -79,6 +90,54 @@ public class DatabaseProvider extends ContentProvider {
                 queryBuilder.setTables(Tables.FAVOURITES);
                 queryBuilder.appendWhere(DatabaseContract.Favourites.CHANNEL_NAME + " LIKE '%" + query + "%'");
                 break;
+            case MOVIES:
+                queryBuilder.setTables(Tables.MOVIES);
+                break;
+            case MOVIES_ID:
+                query = uri.getLastPathSegment();
+                queryBuilder.setTables(Tables.MOVIES);
+                queryBuilder.appendWhere(DatabaseContract.Movies._ID + "=" + query);
+                break;
+            case MOVIES_SEARCH_NAME:
+                List<String> pathSegments = uri.getPathSegments();
+                query = pathSegments.get(2);
+                int genre = Integer.valueOf(pathSegments.get(3));
+                queryBuilder.setTables(Tables.MOVIES);
+                if (!query.equals("null")) {
+                    queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_TITLE + " LIKE '%" + query + "%' AND ");
+                }
+                switch (genre) {
+                    case 1:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Akcija.name() + "'");
+                        break;
+                    case 2:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Avantura.name() + "'");
+                        break;
+                    case 3:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Komedija.name() + "'");
+                        break;
+                    case 4:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Drama.name() + "'");
+                        break;
+                    case 5:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Fantazija.name() + "'");
+                        break;
+                    case 6:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Horor.name() + "'");
+                        break;
+                    case 7:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Misterija.name() + "'");
+                        break;
+                    case 8:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Romantika.name() + "'");
+                        break;
+                    case 9:
+                        queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Triler.name() + "'");
+                        break;
+                    default:
+                        break;
+                }
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -110,6 +169,10 @@ public class DatabaseProvider extends ContentProvider {
                 id = database.insertOrThrow(Tables.FAVOURITES, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return DatabaseContract.Favourites.buildIdUri(String.valueOf(id));
+            case MOVIES:
+                id = database.insertOrThrow(Tables.MOVIES, null, values);
+                getContext().getContentResolver().notifyChange(uri, null);
+                return DatabaseContract.Movies.buildIdUri(String.valueOf(id));
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -132,6 +195,10 @@ public class DatabaseProvider extends ContentProvider {
                 rows = database.delete(Tables.FAVOURITES, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return rows;
+            case MOVIES:
+                rows = database.delete(Tables.MOVIES, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                return rows;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -144,7 +211,7 @@ public class DatabaseProvider extends ContentProvider {
 
         database = databaseHelper.getWritableDatabase();
         int match = uriMatcher.match(uri);
-        int rows = 0;
+        int rows;
         switch (match) {
             case CHANNELS:
                 rows = database.update(Tables.CHANNELS, values, selection, selectionArgs);
@@ -152,6 +219,10 @@ public class DatabaseProvider extends ContentProvider {
                 return rows;
             case FAVOURITES:
                 rows = database.update(Tables.FAVOURITES, values, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                return rows;
+            case MOVIES:
+                rows = database.update(Tables.MOVIES, values, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return rows;
             default:

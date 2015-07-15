@@ -9,6 +9,17 @@ CREATE TABLE Channels (
 	Video_URI TEXT NOT NULL
 );
 
+CREATE TABLE Movies (
+	_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	Title TEXT NOT NULL,
+    Description TEXT,
+	Duration TEXT,
+	Genre TEXT,
+	Poster TEXT,
+	Video_URI TEXT NOT NULL,
+	Subtitle TEXT
+);
+
 CREATE TABLE Favourites (
     _id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     ID INTEGER,
