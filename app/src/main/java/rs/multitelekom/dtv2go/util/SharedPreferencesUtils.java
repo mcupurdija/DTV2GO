@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 public class SharedPreferencesUtils {
 
     public static final String USER_ID_KEY = "dtv2go_user_id";
+    public static final String DEV_ID_KEY = "dev_id";
     public static final String CHANNEL_HD_QUALITY_KEY = "dtv2go_hd_quality";
     public static final String LAST_SYNC_DATE = "dtv2go_last_sync_date";
     public static final String LAST_MOVIES_SYNC_DATE = "dtv2go_last_movies_sync_date";
@@ -23,16 +24,28 @@ public class SharedPreferencesUtils {
         return sp.getString(key, defaultValue);
     }
 
-    public static void saveUserId(Context context, int value) {
+    public static void saveUserId(Context context, String value) {
         SharedPreferences sp = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
         Editor editor = sp.edit();
-        editor.putInt(USER_ID_KEY, value);
+        editor.putString(USER_ID_KEY, value);
         editor.apply();
     }
 
-    public static int getUserId(Context context) {
+    public static String getUserId(Context context) {
         SharedPreferences sp = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return sp.getInt(USER_ID_KEY, -1);
+        return sp.getString(USER_ID_KEY, null);
+    }
+
+    public static void saveDevId(Context context, String value) {
+        SharedPreferences sp = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        Editor editor = sp.edit();
+        editor.putString(DEV_ID_KEY, value);
+        editor.apply();
+    }
+
+    public static String getDevId(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        return sp.getString(DEV_ID_KEY, null);
     }
 
     public static void saveHdQuality(Context context, int value) {

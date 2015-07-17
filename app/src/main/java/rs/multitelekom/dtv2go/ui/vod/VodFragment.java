@@ -1,8 +1,7 @@
-package rs.multitelekom.dtv2go.ui.favourites;
+package rs.multitelekom.dtv2go.ui.vod;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,7 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -21,36 +20,29 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import rs.multitelekom.dtv2go.R;
 import rs.multitelekom.dtv2go.db.DatabaseContract;
 import rs.multitelekom.dtv2go.db.Tables;
 import rs.multitelekom.dtv2go.ui.MainActivity;
 import rs.multitelekom.dtv2go.ui.video.VideoActivity;
-import rs.multitelekom.dtv2go.util.ToastUtils;
 
-
-public class FavouritesFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class VodFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private String mCurFilter;
-    private int span = 3;
 
     private Context context;
     private MainActivity mainActivity;
-    private FavouritesRecyclerViewCursorAdapter mAdapter;
+    private VodRecyclerViewCursorAdapter mAdapter;
 
-    private TextView tvEmptyList;
     private SearchView mSearchView;
 
-    public FavouritesFragment() {
+    public VodFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_favourites, container, false);
+        return inflater.inflate(R.layout.fragment_vod, container, false);
     }
 
     @Override
@@ -62,55 +54,19 @@ public class FavouritesFragment extends Fragment implements SearchView.OnQueryTe
         context = getActivity();
         mainActivity = ((MainActivity) context);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            span = 5;
-        }
-
-        tvEmptyList = (TextView) view.findViewById(R.id.tvEmptyList);
-
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, span);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new FavouritesRecyclerViewCursorAdapter(context, null);
+        mAdapter = new VodRecyclerViewCursorAdapter(context, null);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.SetOnItemClickListener(new FavouritesRecyclerViewCursorAdapter.OnItemClickListener() {
+        mAdapter.SetOnItemClickListener(new VodRecyclerViewCursorAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 
                 Cursor cursor = mAdapter.getCursor();
                 if (cursor.moveToPosition(position)) {
-                    openVideoActivity(cursor.getString(FavouritesQuery.CHANNEL_NAME), cursor.getString(FavouritesQuery.CHANNEL_VIDEO_URI));
-                }
-            }
-        });
-        mAdapter.SetOnItemLongClickListener(new FavouritesRecyclerViewCursorAdapter.OnLongClickListener() {
-            @Override
-            public void onItemLongClick(View view, int position) {
-
-                Cursor cursor = mAdapter.getCursor();
-                if (cursor.moveToPosition(position)) {
-                    final int id = cursor.getInt(FavouritesQuery._ID);
-                    final String channelName = cursor.getString(FavouritesQuery.CHANNEL_NAME);
-                    final String channelVideoUri = cursor.getString(FavouritesQuery.CHANNEL_VIDEO_URI);
-                    new MaterialDialog.Builder(context)
-                            .items(R.array.favourites_list_contextual)
-                            .itemsCallback(new MaterialDialog.ListCallback() {
-                                @Override
-                                public void onSelection(MaterialDialog materialDialog, View view, int which, CharSequence charSequence) {
-                                    switch (which) {
-                                        case 0:
-                                            openVideoActivity(channelName, channelVideoUri);
-                                            break;
-                                        case 1:
-                                            deleteChannelFromFavourites(id);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                            })
-                            .show();
+                    openVideoActivity(cursor.getString(MoviesQuery.MOVIE_TITLE), cursor.getString(MoviesQuery.MOVIE_VIDEO_URI));
                 }
             }
         });
@@ -125,13 +81,6 @@ public class FavouritesFragment extends Fragment implements SearchView.OnQueryTe
         startActivity(intent);
     }
 
-    private void deleteChannelFromFavourites(int channelId) {
-        if (context.getContentResolver().delete(DatabaseContract.Favourites.CONTENT_URI, BaseColumns._ID + "=?", new String[]{String.valueOf(channelId)}) > 0) {
-            mainActivity.refreshDrawer();
-            ToastUtils.displayToast(context, "Kanal je uspešno obrisan iz liste omiljenih kanala!");
-        }
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
@@ -143,9 +92,11 @@ public class FavouritesFragment extends Fragment implements SearchView.OnQueryTe
             mSearchView.setOnQueryTextListener(this);
             mSearchView.setOnCloseListener(this);
             mSearchView.setIconifiedByDefault(true);
-            mSearchView.setQueryHint("ime kanala");
-//            setSearchTextColor(mSearchView);
+            mSearchView.setQueryHint("ime filma");
+            mSearchView.setBackgroundResource(0);
             item_search.setActionView(mSearchView);
+
+            menu.add(Menu.NONE, 1, Menu.FIRST + 1, "Svi žanrovi").setIcon(R.drawable.ic_action_filter).setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
     }
 
@@ -153,20 +104,15 @@ public class FavouritesFragment extends Fragment implements SearchView.OnQueryTe
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri baseUri;
         if (mCurFilter != null) {
-            baseUri = Uri.withAppendedPath(DatabaseContract.Favourites.CONTENT_FILTER_URI, Uri.encode(mCurFilter));
+            baseUri = Uri.withAppendedPath(DatabaseContract.Movies.CONTENT_FILTER_URI, Uri.encode(mCurFilter));
         } else {
-            baseUri = DatabaseContract.Favourites.CONTENT_URI;
+            baseUri = DatabaseContract.Movies.CONTENT_URI;
         }
-        return new CursorLoader(context, baseUri, FavouritesQuery.PROJECTION, null, null, DatabaseContract.Favourites.SORT_BY_NAME);
+        return new CursorLoader(context, baseUri, MoviesQuery.PROJECTION, null, null, DatabaseContract.Movies.SORT_BY_TITLE);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data != null && data.getCount() > 0) {
-            tvEmptyList.setVisibility(View.GONE);
-        } else {
-            tvEmptyList.setVisibility(View.VISIBLE);
-        }
         mAdapter.swapCursor(data);
     }
 
@@ -214,18 +160,26 @@ public class FavouritesFragment extends Fragment implements SearchView.OnQueryTe
         return true;
     }
 
-    public interface FavouritesQuery {
+    public interface MoviesQuery {
 
         String[] PROJECTION = {
-                Tables.FAVOURITES + "." + BaseColumns._ID,
-                Tables.FAVOURITES + "." + DatabaseContract.Favourites.CHANNEL_NAME,
-                Tables.FAVOURITES + "." + DatabaseContract.Favourites.CHANNEL_ICON_URI,
-                Tables.FAVOURITES + "." + DatabaseContract.Favourites.CHANNEL_VIDEO_URI
+                Tables.MOVIES + "." + BaseColumns._ID,
+                Tables.MOVIES + "." + DatabaseContract.Movies.MOVIE_TITLE,
+                Tables.MOVIES + "." + DatabaseContract.Movies.MOVIE_DESCRIPTION,
+                Tables.MOVIES + "." + DatabaseContract.Movies.MOVIE_DURATION,
+                Tables.MOVIES + "." + DatabaseContract.Movies.MOVIE_GENRE,
+                Tables.MOVIES + "." + DatabaseContract.Movies.MOVIE_POSTER,
+                Tables.MOVIES + "." + DatabaseContract.Movies.MOVIE_VIDEO_URI,
+                Tables.MOVIES + "." + DatabaseContract.Movies.MOVIE_SUBTITLE
         };
 
         int _ID = 0;
-        int CHANNEL_NAME = 1;
-        int CHANNEL_ICON_URI = 2;
-        int CHANNEL_VIDEO_URI = 3;
+        int MOVIE_TITLE = 1;
+        int MOVIE_DESCRIPTION = 2;
+        int MOVIE_DURATION = 3;
+        int MOVIE_GENRE = 4;
+        int MOVIE_POSTER = 5;
+        int MOVIE_VIDEO_URI = 6;
+        int MOVIE_SUBTITLE = 7;
     }
 }

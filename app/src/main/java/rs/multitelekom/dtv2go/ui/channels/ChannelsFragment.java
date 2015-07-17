@@ -155,7 +155,7 @@ public class ChannelsFragment extends Fragment implements SearchView.OnQueryText
             mSearchView.setOnCloseListener(this);
             mSearchView.setIconifiedByDefault(true);
             mSearchView.setQueryHint("ime kanala");
-//            setSearchTextColor(mSearchView);
+            mSearchView.setBackgroundResource(0);
             item_search.setActionView(mSearchView);
         }
     }

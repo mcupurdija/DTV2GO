@@ -13,7 +13,6 @@
         <item>Video na zahtev</item>
         <item>Ostalo</item>
         <item>Podešavanja</item>
-        <item>Pomoć</item>
         <item>O aplikaciji</item>
     </string-array>
 
@@ -25,14 +24,34 @@
         <item>@drawable/ic_play</item>
         <item>@drawable/ic_launcher</item>
         <item>@drawable/ic_settings</item>
-        <item>@drawable/ic_help</item>
         <item>@drawable/ic_info</item>
     </array>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_test_video">TestVideoActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
 
+    <string name="logo_desc">Sat-Trakt</string>
+    <string name="username_hint">korisničko ime</string>
+    <string name="password_hint">lozinka</string>
+    <string name="login_button">Prijavite se</string>
+    <string name="contact_button">Nemate nalog? Aktivirajte uslugu ovde</string>
+    <string name="imei">Molimo potvrdite vezivanje ovog uređaja za Vaš nalog.</string>
+    <string name="welcome">Dobrodošli</string>
+    <string name="accept">Prihvatam</string>
+    <string name="refuse">Odustajem</string>
 
+    <string name="empty_favourites">Lista omiljenih kanala je prazna. Dugim pritiskom na željeni kanal pojaviće se opcija kojom ga možete dodati u ovu listu.</string>
+
+    <string name="error_title">Greška</string>
+    <string name="error_username_required">Potrebno je da unesete korisničko ime!</string>
+    <string name="error_password_required">Potrebno je da unesete lozinku!</string>
+    <string name="error_all_accounts_used">Iskoristili se sva tri dostupna naloga!</string>
+    <string name="error_login_disabled">Vaš pristup je onemogućen. Kontaktiraje korisnički servis.</string>
+    <string name="error_login_invalid">Uneti podaci nisu validni.</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
+
+    <string name="about">DTV 2 GO je aplikacija koja korisnicima servisa Interneta i digitalne televizije kablovskog operatera Sat-Trakt omogućuje gledanje TV servisa na mobilnim uređajima baziranim na Android operativnom sistemu.</string>
 
 </resources>

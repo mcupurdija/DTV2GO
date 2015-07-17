@@ -35,6 +35,7 @@ import rs.multitelekom.dtv2go.db.DatabaseContract;
 import rs.multitelekom.dtv2go.model.NavDrawerItem;
 import rs.multitelekom.dtv2go.ui.channels.ChannelsFragment;
 import rs.multitelekom.dtv2go.ui.favourites.FavouritesFragment;
+import rs.multitelekom.dtv2go.ui.vod.VodFragment;
 import rs.multitelekom.dtv2go.util.DateUtils;
 import rs.multitelekom.dtv2go.util.DialogUtils;
 import rs.multitelekom.dtv2go.util.SharedPreferencesUtils;
@@ -53,8 +54,7 @@ public class MainActivity extends BaseActivity {
     private final static int DRAWER_VOD_POSITION = 4;
     private final static int DRAWER_OTHER_TITLE_POSITION = 5;
     private final static int DRAWER_SETTINGS_POSITION = 6;
-    private final static int DRAWER_HELP_POSITION = 7;
-    private final static int DRAWER_ABOUT_POSITION = 8;
+    private final static int DRAWER_ABOUT_POSITION = 7;
 
     private String[] navMenuTitles;
 
@@ -99,7 +99,6 @@ public class MainActivity extends BaseActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_VOD_POSITION], navMenuIcons.getResourceId(DRAWER_VOD_POSITION, -1), false, false));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_OTHER_TITLE_POSITION], -1, false, true));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_SETTINGS_POSITION], navMenuIcons.getResourceId(DRAWER_SETTINGS_POSITION, -1), false, false));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_HELP_POSITION], navMenuIcons.getResourceId(DRAWER_HELP_POSITION, -1), false, false));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_ABOUT_POSITION], navMenuIcons.getResourceId(DRAWER_ABOUT_POSITION, -1), false, false));
 
         adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
@@ -174,6 +173,7 @@ public class MainActivity extends BaseActivity {
             if (progressDialog != null) {
                 progressDialog.dismiss();
             }
+            refreshDrawer();
             ToastUtils.displayPositionedToast(MainActivity.this, "Lista kanala je uspešno ažurirana!", Gravity.CENTER);
         }
 
@@ -214,16 +214,13 @@ public class MainActivity extends BaseActivity {
                 fragment = new FavouritesFragment();
                 break;
             case DRAWER_VOD_POSITION:
-                fragment = new TestFragment();
+                fragment = new VodFragment();
                 break;
             case DRAWER_SETTINGS_POSITION:
                 fragment = new TestFragment();
                 break;
-            case DRAWER_HELP_POSITION:
-                fragment = new TestFragment();
-                break;
             case DRAWER_ABOUT_POSITION:
-                fragment = new TestFragment();
+                fragment = new AboutFragment();
                 break;
             default:
                 break;
