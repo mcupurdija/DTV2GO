@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/genres0"
+        android:title="@string/genres0"/>
+    <item
+        android:id="@+id/genres1"
+        android:title="@string/genres1"/>
+    <item
+        android:id="@+id/genres2"
+        android:title="@string/genres2"/>
+    <item
+        android:id="@+id/genres3"
+        android:title="@string/genres3"/>
+    <item
+        android:id="@+id/genres4"
+        android:title="@string/genres4"/>
+    <item
+        android:id="@+id/genres5"
+        android:title="@string/genres5"/>
+    <item
+        android:id="@+id/genres6"
+        android:title="@string/genres6"/>
+    <item
+        android:id="@+id/genres7"
+        android:title="@string/genres7"/>
+    <item
+        android:id="@+id/genres8"
+        android:title="@string/genres8"/>
+    <item
+        android:id="@+id/genres9"
+        android:title="@string/genres9"/>
+
+</menu>

@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_MAIN_MENU_TITLE_POSITION], -1, false, true));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_CHANNEL_LIST_POSITION], navMenuIcons.getResourceId(DRAWER_CHANNEL_LIST_POSITION, -1), false, false, true, getChannelsCount()));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_FAVOURITES_POSITION], navMenuIcons.getResourceId(DRAWER_FAVOURITES_POSITION, -1), false, false, true, getFavouritesCount()));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_VOD_POSITION], navMenuIcons.getResourceId(DRAWER_VOD_POSITION, -1), false, false));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_VOD_POSITION], navMenuIcons.getResourceId(DRAWER_VOD_POSITION, -1), false, false, true, getMoviesCount()));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_OTHER_TITLE_POSITION], -1, false, true));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_SETTINGS_POSITION], navMenuIcons.getResourceId(DRAWER_SETTINGS_POSITION, -1), false, false));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[DRAWER_ABOUT_POSITION], navMenuIcons.getResourceId(DRAWER_ABOUT_POSITION, -1), false, false));
@@ -252,6 +252,7 @@ public class MainActivity extends BaseActivity {
     public void refreshDrawer() {
         navDrawerItems.set(DRAWER_CHANNEL_LIST_POSITION, new NavDrawerItem(navMenuTitles[DRAWER_CHANNEL_LIST_POSITION], navMenuIcons.getResourceId(DRAWER_CHANNEL_LIST_POSITION, -1), false, false, true, getChannelsCount()));
         navDrawerItems.set(DRAWER_FAVOURITES_POSITION, new NavDrawerItem(navMenuTitles[DRAWER_FAVOURITES_POSITION], navMenuIcons.getResourceId(DRAWER_FAVOURITES_POSITION, -1), false, false, true, getFavouritesCount()));
+        navDrawerItems.set(DRAWER_VOD_POSITION, new NavDrawerItem(navMenuTitles[DRAWER_VOD_POSITION], navMenuIcons.getResourceId(DRAWER_VOD_POSITION, -1), false, false, true, getMoviesCount()));
         adapter.notifyDataSetChanged();
     }
 
@@ -264,6 +265,13 @@ public class MainActivity extends BaseActivity {
 
     private String getFavouritesCount() {
         Cursor cursor = getContentResolver().query(DatabaseContract.Favourites.CONTENT_URI, null, null, null, null);
+        int result = cursor.getCount();
+        cursor.close();
+        return String.valueOf(result);
+    }
+
+    private String getMoviesCount() {
+        Cursor cursor = getContentResolver().query(DatabaseContract.Movies.CONTENT_URI, null, null, null, null);
         int result = cursor.getCount();
         cursor.close();
         return String.valueOf(result);

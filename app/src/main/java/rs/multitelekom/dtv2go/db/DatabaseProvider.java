@@ -135,6 +135,7 @@ public class DatabaseProvider extends ContentProvider {
                         queryBuilder.appendWhere(DatabaseContract.Movies.MOVIE_GENRE + "='" + Genres.Triler.name() + "'");
                         break;
                     default:
+                        queryBuilder.appendWhere("1");
                         break;
                 }
                 break;

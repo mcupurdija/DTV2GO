@@ -115,7 +115,7 @@ public class FavouritesFragment extends Fragment implements SearchView.OnQueryTe
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     private void openVideoActivity(String channelName, String videoUri) {
@@ -128,7 +128,7 @@ public class FavouritesFragment extends Fragment implements SearchView.OnQueryTe
     private void deleteChannelFromFavourites(int channelId) {
         if (context.getContentResolver().delete(DatabaseContract.Favourites.CONTENT_URI, BaseColumns._ID + "=?", new String[]{String.valueOf(channelId)}) > 0) {
             mainActivity.refreshDrawer();
-            ToastUtils.displayToast(context, "Kanal je uspešno obrisan iz liste omiljenih kanala!");
+            ToastUtils.displayToast(context, "Kanal je uspešno obrisan iz liste omiljenih kanala");
         }
     }
 

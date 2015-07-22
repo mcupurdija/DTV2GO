@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,11 +31,13 @@ import rs.multitelekom.dtv2go.ui.video.VideoActivity;
 public class VodFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private String mCurFilter;
+    private int selectedGenre = 0;
 
     private Context context;
     private MainActivity mainActivity;
     private VodRecyclerViewCursorAdapter mAdapter;
 
+    private Menu menu;
     private SearchView mSearchView;
 
     public VodFragment() {
@@ -71,7 +74,7 @@ public class VodFragment extends Fragment implements SearchView.OnQueryTextListe
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     private void openVideoActivity(String channelName, String videoUri) {
@@ -85,6 +88,8 @@ public class VodFragment extends Fragment implements SearchView.OnQueryTextListe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         if (isAdded()) {
+            this.menu = menu;
+
             MenuItem item_search = menu.add("Pretraga");
             item_search.setIcon(R.drawable.ic_action_search);
             item_search.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -96,15 +101,106 @@ public class VodFragment extends Fragment implements SearchView.OnQueryTextListe
             mSearchView.setBackgroundResource(0);
             item_search.setActionView(mSearchView);
 
-            menu.add(Menu.NONE, 1, Menu.FIRST + 1, "Svi žanrovi").setIcon(R.drawable.ic_action_filter).setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            SubMenu subMenu = menu.addSubMenu(Menu.NONE, 1, Menu.FIRST, "Filter");
+            subMenu.add(Menu.NONE, 2, Menu.FIRST + 1, R.string.genres0);
+            subMenu.add(Menu.NONE, 3, Menu.FIRST + 2, R.string.genres1);
+            subMenu.add(Menu.NONE, 4, Menu.FIRST + 3, R.string.genres2);
+            subMenu.add(Menu.NONE, 5, Menu.FIRST + 4, R.string.genres3);
+            subMenu.add(Menu.NONE, 6, Menu.FIRST + 5, R.string.genres4);
+            subMenu.add(Menu.NONE, 7, Menu.FIRST + 6, R.string.genres5);
+            subMenu.add(Menu.NONE, 8, Menu.FIRST + 7, R.string.genres6);
+            subMenu.add(Menu.NONE, 9, Menu.FIRST + 8, R.string.genres7);
+            subMenu.add(Menu.NONE, 10, Menu.FIRST + 9, R.string.genres8);
+            subMenu.add(Menu.NONE, 11, Menu.FIRST + 10, R.string.genres9);
+            subMenu.getItem().setIcon(R.drawable.ic_action_filter).setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case 2:
+                selectedGenre = 0;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres0);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 3:
+                selectedGenre = 1;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres1);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 4:
+                selectedGenre = 2;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres2);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 5:
+                selectedGenre = 3;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres3);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 6:
+                selectedGenre = 4;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres4);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 7:
+                selectedGenre = 5;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres5);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 8:
+                selectedGenre = 6;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres6);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 9:
+                selectedGenre = 7;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres7);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 10:
+                selectedGenre = 8;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres8);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            case 11:
+                selectedGenre = 9;
+                if (menu != null) {
+                    menu.findItem(1).setTitle(R.string.genres9);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri baseUri;
-        if (mCurFilter != null) {
-            baseUri = Uri.withAppendedPath(DatabaseContract.Movies.CONTENT_FILTER_URI, Uri.encode(mCurFilter));
+        if (mCurFilter != null || selectedGenre > 0) {
+            baseUri = DatabaseContract.Movies.buildMoviesFilterUri(mCurFilter, selectedGenre);
         } else {
             baseUri = DatabaseContract.Movies.CONTENT_URI;
         }

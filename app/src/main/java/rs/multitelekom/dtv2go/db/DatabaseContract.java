@@ -70,12 +70,15 @@ public class DatabaseContract {
     public static class Movies implements MoviesColumns, BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
-        public static final Uri CONTENT_FILTER_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).appendPath(PATH_NAME).build();
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.rs.multitelekom.dtv2go.Movies";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.rs.multitelekom.dtv2go.Movies";
 
         public static final String SORT_BY_TITLE = MOVIE_TITLE + " ASC";
+
+        public static Uri buildMoviesFilterUri(String query, int genre) {
+            return CONTENT_URI.buildUpon().appendPath(PATH_NAME).appendPath(query).appendPath(String.valueOf(genre)).build();
+        }
 
         public static Uri buildIdUri(String id) {
             return CONTENT_URI.buildUpon().appendPath(id).build();

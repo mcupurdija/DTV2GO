@@ -113,7 +113,7 @@ public class ChannelsFragment extends Fragment implements SearchView.OnQueryText
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     private void openVideoActivity(String channelName, String videoUri) {
@@ -129,7 +129,7 @@ public class ChannelsFragment extends Fragment implements SearchView.OnQueryText
         int count = cursor.getCount();
         cursor.close();
         if (count > 0) {
-            ToastUtils.displayToast(context, "Kanal je već dodat u listu omiljenih kanala!");
+            ToastUtils.displayToast(context, "Kanal je već dodat u listu omiljenih kanala");
         } else {
             ContentValues contentValues = new ContentValues();
             contentValues.put(DatabaseContract.Favourites.CHANNEL_ID, channelID);
@@ -139,7 +139,7 @@ public class ChannelsFragment extends Fragment implements SearchView.OnQueryText
             context.getContentResolver().insert(DatabaseContract.Favourites.CONTENT_URI, contentValues);
 
             mainActivity.refreshDrawer();
-            ToastUtils.displayToast(context, "Kanal je uspešno dodat u listu omiljenih kanala!");
+            ToastUtils.displayToast(context, "Kanal je uspešno dodat u listu omiljenih kanala");
         }
     }
 

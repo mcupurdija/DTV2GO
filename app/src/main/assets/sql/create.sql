@@ -52,5 +52,5 @@ CREATE TABLE Accounts (
 -- INSERT INTO Channels VALUES (5, 0, 'PRVA', 'http://www.lyngsat-logo.com/hires/pp/prva_rs_crna_gora.png', '');
 -- INSERT INTO Channels VALUES (6, 0, 'ANIMAL PLANET', 'http://www.lyngsat-logo.com/hires/aa/animal_planet_us.png', '');
 
-INSERT INTO Movies VALUES (1, 'Gladiator', 'When a Roman general is betrayed and his family murdered by an emperor''s corrupt son, he comes to Rome as a gladiator to seek revenge.', '110', 'Action', 'http://ia.media-imdb.com/images/M/MV5BMTgwMzQzNTQ1Ml5BMl5BanBnXkFtZTgwMDY2NTYxMTE@._V1_SY317_CR0,0,214,317_AL_.jpg', '', '');
-INSERT INTO Movies VALUES (2, 'Titanic', 'A seventeen-year-old aristocrat falls in love with a kind, but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.', '120', 'Drama', 'http://ia.media-imdb.com/images/M/MV5BMjExNzM0NDM0N15BMl5BanBnXkFtZTcwMzkxOTUwNw@@._V1_SY317_CR0,0,214,317_AL_.jpg', '', '');
+INSERT INTO Movies VALUES (1, 'Gladiator', 'When a Roman general is betrayed and his family murdered by an emperor''s corrupt son, he comes to Rome as a gladiator to seek revenge.', '110 min', 'Akcija', 'http://ia.media-imdb.com/images/M/MV5BMTgwMzQzNTQ1Ml5BMl5BanBnXkFtZTgwMDY2NTYxMTE@._V1_SY317_CR0,0,214,317_AL_.jpg', '', '');
+INSERT INTO Movies VALUES (2, 'Titanic', 'A seventeen-year-old aristocrat falls in love with a kind, but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.', '120 min', 'Drama', 'http://ia.media-imdb.com/images/M/MV5BMjExNzM0NDM0N15BMl5BanBnXkFtZTcwMzkxOTUwNw@@._V1_SY317_CR0,0,214,317_AL_.jpg', '', '');

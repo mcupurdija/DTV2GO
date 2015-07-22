@@ -44,6 +44,17 @@
 
     <string name="empty_favourites">Lista omiljenih kanala je prazna. Dugim pritiskom na željeni kanal pojaviće se opcija kojom ga možete dodati u ovu listu.</string>
 
+    <string name="genres0">Svi žanrovi</string>
+    <string name="genres1">Akcija</string>
+    <string name="genres2">Avantura</string>
+    <string name="genres3">Komedija</string>
+    <string name="genres4">Drama</string>
+    <string name="genres5">Fantazija</string>
+    <string name="genres6">Horor</string>
+    <string name="genres7">Misterija</string>
+    <string name="genres8">Romantika</string>
+    <string name="genres9">Triler</string>
+
     <string name="error_title">Greška</string>
     <string name="error_username_required">Potrebno je da unesete korisničko ime!</string>
     <string name="error_password_required">Potrebno je da unesete lozinku!</string>
