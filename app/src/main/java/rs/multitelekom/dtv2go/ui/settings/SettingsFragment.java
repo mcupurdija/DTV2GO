@@ -3,6 +3,7 @@ package rs.multitelekom.dtv2go.ui.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -15,7 +16,6 @@ import rs.multitelekom.dtv2go.util.AppConstants;
 
 public class SettingsFragment extends PreferenceFragment {
 
-    private Context context;
     private MainActivity mainActivity;
 
     public SettingsFragment() {
@@ -31,13 +31,22 @@ public class SettingsFragment extends PreferenceFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        context = getActivity();
+        Context context = getActivity();
         mainActivity = ((MainActivity) context);
 
         ListView list = (ListView) view.findViewById(android.R.id.list);
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) list.getLayoutParams();
-        marginLayoutParams.setMargins(0, 80, 0, 0);
+        marginLayoutParams.setMargins(0, 96, 0, 0);
         list.setLayoutParams(marginLayoutParams);
+
+        Preference updateData = findPreference(AppConstants.UPDATE_DATA_PREFERENCE_KEY);
+        updateData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                mainActivity.updateData(true);
+                return true;
+            }
+        });
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {

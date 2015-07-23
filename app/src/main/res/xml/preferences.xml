@@ -19,4 +19,8 @@
         android:summary="Odaberite početni ekran"
         android:title="Početni ekran" />
 
+    <Preference
+        android:title="Ažurirajte liste"
+        android:key="updateData"/>
+
 </PreferenceScreen>

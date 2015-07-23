@@ -18,7 +18,8 @@ import java.util.Map;
         "active",
         "name",
         "id",
-        "devices"
+        "devices",
+        "error"
 })
 public class Login {
 
@@ -36,6 +37,8 @@ public class Login {
     private String id;
     @JsonProperty("devices")
     private Devices devices;
+    @JsonProperty("error")
+    private String error;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -149,6 +152,22 @@ public class Login {
     @JsonProperty("devices")
     public void setDevices(Devices devices) {
         this.devices = devices;
+    }
+
+    /**
+     * @return The error
+     */
+    @JsonProperty("error")
+    public String getError() {
+        return error;
+    }
+
+    /**
+     * @param error The error
+     */
+    @JsonProperty("error")
+    public void setError(String error) {
+        this.error = error;
     }
 
     @JsonAnyGetter

@@ -43,7 +43,7 @@ import rs.multitelekom.dtv2go.util.DateUtils;
 import rs.multitelekom.dtv2go.util.DialogUtils;
 import rs.multitelekom.dtv2go.util.SharedPreferencesUtils;
 import rs.multitelekom.dtv2go.util.ToastUtils;
-import rs.multitelekom.dtv2go.ws.request.GetChannelsRequest;
+import rs.multitelekom.dtv2go.ws.request.GetDataRequest;
 
 
 public class MainActivity extends BaseActivity {
@@ -148,30 +148,29 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        updateChannels(false);
+        updateData(false);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        getSpiceManager().addListenerIfPending(Integer.class, GetChannelsRequest.class.getSimpleName(), new GetChannelsRequestListener());
+        getSpiceManager().addListenerIfPending(Integer.class, GetDataRequest.class.getSimpleName(), new GetChannelsRequestListener());
     }
 
-    public void updateChannels(boolean forced) {
+    public void updateData(boolean forced) {
 
         if (!forced) {
             String lastSyncDate = SharedPreferencesUtils.getLastSyncDate(this);
             String currentDate = DateUtils.formatDate(new Date());
 
-            if (lastSyncDate == null || !lastSyncDate.equals(currentDate)) {
-                progressDialog = new MaterialDialog.Builder(this).title("Lista kanala se ažurira").content("Molimo sačekajte...").progress(true, 0).show();
-            } else {
+            if (lastSyncDate != null && lastSyncDate.equals(currentDate)) {
                 return;
             }
         }
-        GetChannelsRequest getChannelsRequest = new GetChannelsRequest(this);
-        getSpiceManager().execute(getChannelsRequest, GetChannelsRequest.class.getSimpleName(), DurationInMillis.ONE_MINUTE, new GetChannelsRequestListener());
+        progressDialog = new MaterialDialog.Builder(this).title("Liste se ažuriraju").content("Molimo sačekajte...").progress(true, 0).show();
+        GetDataRequest getDataRequest = new GetDataRequest(this);
+        getSpiceManager().execute(getDataRequest, GetDataRequest.class.getSimpleName(), DurationInMillis.ONE_MINUTE, new GetChannelsRequestListener());
     }
 
     private class GetChannelsRequestListener implements PendingRequestListener<Integer> {
@@ -190,7 +189,7 @@ public class MainActivity extends BaseActivity {
                 progressDialog.dismiss();
             }
             refreshDrawer();
-            ToastUtils.displayPositionedToast(MainActivity.this, "Lista kanala je uspešno ažurirana!", Gravity.CENTER);
+            ToastUtils.displayPositionedToast(MainActivity.this, "Liste su uspešno ažurirane!", Gravity.CENTER);
         }
 
         @Override

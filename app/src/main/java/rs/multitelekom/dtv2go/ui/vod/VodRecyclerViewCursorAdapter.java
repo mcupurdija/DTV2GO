@@ -92,7 +92,7 @@ public class VodRecyclerViewCursorAdapter extends RecyclerViewCursorAdapter<VodR
         String icon_uri = cursor.getString(VodFragment.MoviesQuery.MOVIE_POSTER);
         if (!TextUtils.isEmpty(icon_uri)) {
             Picasso.with(viewHolder.ivMoviePoster.getContext()).cancelRequest(viewHolder.ivMoviePoster);
-            Picasso.with(viewHolder.ivMoviePoster.getContext()).load(icon_uri).placeholder(R.drawable.ic_placeholder).resize(0, UIUtils.convertToDip(mContext, 140)).into(viewHolder.ivMoviePoster);
+            Picasso.with(viewHolder.ivMoviePoster.getContext()).load(icon_uri).resize(0, UIUtils.convertToDip(mContext, 140)).into(viewHolder.ivMoviePoster);
         }
     }
 }

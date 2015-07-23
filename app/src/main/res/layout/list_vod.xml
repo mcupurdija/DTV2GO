@@ -22,8 +22,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="8dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_placeholder" />
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/tvMovieTitle"

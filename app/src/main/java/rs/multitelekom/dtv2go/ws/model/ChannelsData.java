@@ -6,9 +6,9 @@ import org.simpleframework.xml.Root;
 import java.util.List;
 
 @Root(name = "tv_channels")
-public class GetChannelsResponse {
+public class ChannelsData {
 
-    @ElementList(entry = "tv_channel", inline = true)
+    @ElementList(entry = "tv_channel", inline = true, required = false)
     private List<Channel> channels;
 
     public List<Channel> getChannels() {

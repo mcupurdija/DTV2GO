@@ -1,5 +1,7 @@
 package rs.multitelekom.dtv2go.ws.request;
 
+import android.text.TextUtils;
+
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
 import org.springframework.http.ContentCodingType;
@@ -14,6 +16,7 @@ import java.util.Collections;
 
 import rs.multitelekom.dtv2go.util.AppConstants;
 import rs.multitelekom.dtv2go.ws.model.Registration;
+import rs.multitelekom.dtv2go.ws.model.RegistrationResponse;
 
 public class PutRegistrationRequest extends SpringAndroidSpiceRequest<String> {
 
@@ -39,8 +42,12 @@ public class PutRegistrationRequest extends SpringAndroidSpiceRequest<String> {
 
         HttpEntity<Registration> requestEntity = new HttpEntity<>(registration, requestHeaders);
 
-        ResponseEntity<String> responseEntity = getRestTemplate().exchange(url, HttpMethod.PUT, requestEntity, String.class);
-
-        return responseEntity.getBody();
+        ResponseEntity<RegistrationResponse> responseEntity = getRestTemplate().exchange(url, HttpMethod.PUT, requestEntity, RegistrationResponse.class);
+        RegistrationResponse response = responseEntity.getBody();
+        String error = response.getError();
+        if (!TextUtils.isEmpty(error)) {
+            return error;
+        }
+        return null;
     }
 }

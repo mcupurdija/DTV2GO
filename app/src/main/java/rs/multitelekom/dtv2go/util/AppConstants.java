@@ -5,6 +5,7 @@ public class AppConstants {
     public static final String SHARED_PREFERENCES = "dtv2go_preferences";
     public static final String QUALITY_PREFERENCE_KEY = "streamQuality";
     public static final String START_FRAGMENT_PREFERENCE_KEY = "startFragment";
+    public static final String UPDATE_DATA_PREFERENCE_KEY = "updateData";
 
     public static final String WEB_API = "http://1308.eu01.aws.af.cm/korisnici/";
     public static final String WEB_API_D = "http://1308.eu01.aws.af.cm/korisnici/devid/";
