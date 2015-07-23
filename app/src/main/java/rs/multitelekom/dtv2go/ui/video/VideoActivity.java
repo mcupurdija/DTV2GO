@@ -3,6 +3,9 @@ package rs.multitelekom.dtv2go.ui.video;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -12,6 +15,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.octo.android.robospice.request.simple.SmallBinaryRequest;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
@@ -22,8 +32,10 @@ import rs.multitelekom.dtv2go.ui.BaseActivity;
 
 public class VideoActivity extends BaseActivity {
 
+    public static final String TAG = "VideoActivity";
     public static final String NAME_EXTRA_KEY = "name_extra";
     public static final String VIDEO_URI_EXTRA_KEY = "video_uri_extra";
+    public static final String SUBTITLE_URI_EXTRA_KEY = "subtitle_uri_extra";
 
     private int mVideoLayout = 1;
     private boolean mute = false;
@@ -41,8 +53,9 @@ public class VideoActivity extends BaseActivity {
 
         String channelName = getIntent().getExtras().getString(NAME_EXTRA_KEY, null);
         String videoUri = getIntent().getExtras().getString(VIDEO_URI_EXTRA_KEY, null);
+        String subtitleUri = getIntent().getExtras().getString(SUBTITLE_URI_EXTRA_KEY, null);
 
-        if (!LibsChecker.checkVitamioLibs(this) || videoUri == null) {
+        if (!LibsChecker.checkVitamioLibs(this) || TextUtils.isEmpty(videoUri)) {
             finish();
         }
 
@@ -66,6 +79,49 @@ public class VideoActivity extends BaseActivity {
         });
 
         progressDialog = new MaterialDialog.Builder(this).title("Kanal se učitava").content("Molimo sačekajte...").progress(true, 0).show();
+
+        if (!TextUtils.isEmpty(subtitleUri)) {
+            getSpiceManager().execute(new SmallBinaryRequest(subtitleUri), new FileDownloadRequestListener());
+        }
+    }
+
+    private class FileDownloadRequestListener implements RequestListener<InputStream> {
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            if (spiceException.getMessage() != null) {
+                Log.e(TAG, spiceException.getMessage());
+            }
+        }
+
+        @Override
+        public void onRequestSuccess(InputStream is) {
+
+            try {
+
+                File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+                File file = new File(dir, "tmp.srt");
+
+                FileOutputStream fos = new FileOutputStream(file);
+
+                byte[] buffer = new byte[1024];
+                int len1;
+                while ((len1 = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len1);
+                }
+                fos.close();
+                is.close();
+
+                if (mVideoView != null) {
+                    mVideoView.addTimedTextSource(file.getPath());
+                    mVideoView.setTimedTextShown(true);
+                }
+            } catch (Exception e) {
+                if (e.getMessage() != null) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+        }
     }
 
     private void closeActivity() {

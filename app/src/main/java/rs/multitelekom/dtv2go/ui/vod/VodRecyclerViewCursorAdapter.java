@@ -78,10 +78,7 @@ public class VodRecyclerViewCursorAdapter extends RecyclerViewCursorAdapter<VodR
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_vod, parent, false);
-        ViewHolder vh = new ViewHolder(itemView);
-        // bad practice
-        vh.setIsRecyclable(false);
-        return vh;
+        return new ViewHolder(itemView);
     }
 
     @Override
@@ -91,12 +88,11 @@ public class VodRecyclerViewCursorAdapter extends RecyclerViewCursorAdapter<VodR
         viewHolder.tvMovieDescription.setText(cursor.getString(VodFragment.MoviesQuery.MOVIE_DESCRIPTION));
         viewHolder.tvMovieDuration.setText(cursor.getString(VodFragment.MoviesQuery.MOVIE_DURATION));
         viewHolder.tvMovieGenre.setText(cursor.getString(VodFragment.MoviesQuery.MOVIE_GENRE));
+        viewHolder.ivMoviePoster.setImageBitmap(null);
         String icon_uri = cursor.getString(VodFragment.MoviesQuery.MOVIE_POSTER);
         if (!TextUtils.isEmpty(icon_uri)) {
-
-            viewHolder.ivMoviePoster.setImageBitmap(null);
             Picasso.with(viewHolder.ivMoviePoster.getContext()).cancelRequest(viewHolder.ivMoviePoster);
-            Picasso.with(viewHolder.ivMoviePoster.getContext()).load(icon_uri).resize(0, UIUtils.convertToDip(mContext, 140)).into(viewHolder.ivMoviePoster);
+            Picasso.with(viewHolder.ivMoviePoster.getContext()).load(icon_uri).placeholder(R.drawable.ic_placeholder).resize(0, UIUtils.convertToDip(mContext, 140)).into(viewHolder.ivMoviePoster);
         }
     }
 }

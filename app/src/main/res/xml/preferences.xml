@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="0"
+        android:dialogTitle="Odaberite kvalitet video snimka:"
+        android:entries="@array/stream_quality_titles"
+        android:entryValues="@array/stream_quality_values"
+        android:key="streamQuality"
+        android:summary="Odaberite kvalitet video snimka"
+        android:title="Video kvalitet" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:dialogTitle="Odaberite početni ekran:"
+        android:entries="@array/start_fragment_titles"
+        android:entryValues="@array/start_fragment_values"
+        android:key="startFragment"
+        android:summary="Odaberite početni ekran"
+        android:title="Početni ekran" />
+
+</PreferenceScreen>

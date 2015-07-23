@@ -1,13 +1,14 @@
 package rs.multitelekom.dtv2go.ui;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -35,7 +36,9 @@ import rs.multitelekom.dtv2go.db.DatabaseContract;
 import rs.multitelekom.dtv2go.model.NavDrawerItem;
 import rs.multitelekom.dtv2go.ui.channels.ChannelsFragment;
 import rs.multitelekom.dtv2go.ui.favourites.FavouritesFragment;
+import rs.multitelekom.dtv2go.ui.settings.SettingsFragment;
 import rs.multitelekom.dtv2go.ui.vod.VodFragment;
+import rs.multitelekom.dtv2go.util.AppConstants;
 import rs.multitelekom.dtv2go.util.DateUtils;
 import rs.multitelekom.dtv2go.util.DialogUtils;
 import rs.multitelekom.dtv2go.util.SharedPreferencesUtils;
@@ -127,9 +130,22 @@ public class MainActivity extends BaseActivity {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        // display dashboard
+        // start fragment
         if (savedInstanceState == null) {
-            displayView(DRAWER_CHANNEL_LIST_POSITION);
+            int startFragment = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString(AppConstants.START_FRAGMENT_PREFERENCE_KEY, "0"));
+            switch (startFragment) {
+                case 0:
+                    displayView(DRAWER_CHANNEL_LIST_POSITION);
+                    break;
+                case 1:
+                    displayView(DRAWER_FAVOURITES_POSITION);
+                    break;
+                case 2:
+                    displayView(DRAWER_VOD_POSITION);
+                    break;
+                default:
+                    break;
+            }
         }
 
         updateChannels(false);
@@ -154,7 +170,7 @@ public class MainActivity extends BaseActivity {
                 return;
             }
         }
-        GetChannelsRequest getChannelsRequest = new GetChannelsRequest(this, "http://www.stcable.tv/ott/android_app_list.xml");
+        GetChannelsRequest getChannelsRequest = new GetChannelsRequest(this);
         getSpiceManager().execute(getChannelsRequest, GetChannelsRequest.class.getSimpleName(), DurationInMillis.ONE_MINUTE, new GetChannelsRequestListener());
     }
 
@@ -217,7 +233,7 @@ public class MainActivity extends BaseActivity {
                 fragment = new VodFragment();
                 break;
             case DRAWER_SETTINGS_POSITION:
-                fragment = new TestFragment();
+                fragment = new SettingsFragment();
                 break;
             case DRAWER_ABOUT_POSITION:
                 fragment = new AboutFragment();
@@ -233,8 +249,8 @@ public class MainActivity extends BaseActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commitAllowingStateLoss();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment).addToBackStack(null).commit();
                     }
                 }, WAIT_FOR_DRAWER_TO_CLOSE_DELAY);
 

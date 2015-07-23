@@ -1,11 +1,20 @@
 package rs.multitelekom.dtv2go.ws.model;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Registration {
 
+    @JsonProperty("password")
     private String password;
+    @JsonProperty("imei")
     private String imei;
+    @JsonProperty("type")
     private String type;
+    @JsonProperty("device")
     private String device;
+    @JsonProperty("active")
     private String active;
 
     public Registration() {

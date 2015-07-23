@@ -21,7 +21,8 @@
             android:layout_above="@+id/tvChannelName"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_placeholder"/>
 
         <TextView
             android:id="@+id/tvChannelName"

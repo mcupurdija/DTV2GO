@@ -18,6 +18,7 @@ public class DatabaseContract {
         String CHANNEL_NAME = "Name";
         String CHANNEL_ICON_URI = "Icon_URI";
         String CHANNEL_VIDEO_URI = "Video_URI";
+        String QUALITY = "Quality";
     }
 
     public interface FavouritesColumns {
@@ -25,6 +26,7 @@ public class DatabaseContract {
         String CHANNEL_NAME = "Name";
         String CHANNEL_ICON_URI = "Icon_URI";
         String CHANNEL_VIDEO_URI = "Video_URI";
+        String QUALITY = "Quality";
     }
 
     public interface MoviesColumns {

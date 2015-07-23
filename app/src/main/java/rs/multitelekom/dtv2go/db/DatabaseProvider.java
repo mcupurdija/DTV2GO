@@ -7,11 +7,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.List;
 
 import rs.multitelekom.dtv2go.ui.vod.Genres;
+import rs.multitelekom.dtv2go.util.AppConstants;
 
 public class DatabaseProvider extends ContentProvider {
 
@@ -66,6 +68,7 @@ public class DatabaseProvider extends ContentProvider {
         switch (uriType) {
             case CHANNELS:
                 queryBuilder.setTables(Tables.CHANNELS);
+                queryBuilder.appendWhere(DatabaseContract.Channels.QUALITY + "=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString(AppConstants.QUALITY_PREFERENCE_KEY, "0"));
                 break;
             case CHANNELS_ID:
                 query = uri.getLastPathSegment();
@@ -76,9 +79,11 @@ public class DatabaseProvider extends ContentProvider {
                 query = uri.getLastPathSegment();
                 queryBuilder.setTables(Tables.CHANNELS);
                 queryBuilder.appendWhere(DatabaseContract.Channels.CHANNEL_NAME + " LIKE '%" + query + "%'");
+                queryBuilder.appendWhere(" AND " + DatabaseContract.Channels.QUALITY + "=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString(AppConstants.QUALITY_PREFERENCE_KEY, "0"));
                 break;
             case FAVOURITES:
                 queryBuilder.setTables(Tables.FAVOURITES);
+                queryBuilder.appendWhere(DatabaseContract.Favourites.QUALITY + "=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString(AppConstants.QUALITY_PREFERENCE_KEY, "0"));
                 break;
             case FAVOURITES_ID:
                 query = uri.getLastPathSegment();
@@ -89,6 +94,7 @@ public class DatabaseProvider extends ContentProvider {
                 query = uri.getLastPathSegment();
                 queryBuilder.setTables(Tables.FAVOURITES);
                 queryBuilder.appendWhere(DatabaseContract.Favourites.CHANNEL_NAME + " LIKE '%" + query + "%'");
+                queryBuilder.appendWhere(" AND " + DatabaseContract.Favourites.QUALITY + "=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString(AppConstants.QUALITY_PREFERENCE_KEY, "0"));
                 break;
             case MOVIES:
                 queryBuilder.setTables(Tables.MOVIES);

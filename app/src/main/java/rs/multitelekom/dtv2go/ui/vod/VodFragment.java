@@ -1,15 +1,15 @@
 package rs.multitelekom.dtv2go.ui.vod;
 
+import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -69,7 +69,7 @@ public class VodFragment extends Fragment implements SearchView.OnQueryTextListe
 
                 Cursor cursor = mAdapter.getCursor();
                 if (cursor.moveToPosition(position)) {
-                    openVideoActivity(cursor.getString(MoviesQuery.MOVIE_TITLE), cursor.getString(MoviesQuery.MOVIE_VIDEO_URI));
+                    openVideoActivity(cursor.getString(MoviesQuery.MOVIE_TITLE), cursor.getString(MoviesQuery.MOVIE_VIDEO_URI), cursor.getString(MoviesQuery.MOVIE_SUBTITLE));
                 }
             }
         });
@@ -77,10 +77,11 @@ public class VodFragment extends Fragment implements SearchView.OnQueryTextListe
         getLoaderManager().restartLoader(0, null, this);
     }
 
-    private void openVideoActivity(String channelName, String videoUri) {
+    private void openVideoActivity(String channelName, String videoUri, String subtitleUri) {
         Intent intent = new Intent(context, VideoActivity.class);
         intent.putExtra(VideoActivity.NAME_EXTRA_KEY, channelName);
         intent.putExtra(VideoActivity.VIDEO_URI_EXTRA_KEY, videoUri);
+        intent.putExtra(VideoActivity.SUBTITLE_URI_EXTRA_KEY, subtitleUri);
         startActivity(intent);
     }
 

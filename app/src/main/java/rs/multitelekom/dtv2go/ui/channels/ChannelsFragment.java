@@ -1,17 +1,18 @@
 package rs.multitelekom.dtv2go.ui.channels;
 
+import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -30,12 +31,13 @@ import rs.multitelekom.dtv2go.db.DatabaseContract;
 import rs.multitelekom.dtv2go.db.Tables;
 import rs.multitelekom.dtv2go.ui.MainActivity;
 import rs.multitelekom.dtv2go.ui.video.VideoActivity;
+import rs.multitelekom.dtv2go.util.AppConstants;
 import rs.multitelekom.dtv2go.util.ToastUtils;
 
 public class ChannelsFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private String mCurFilter;
-    private int span = 3;
+    private int span = 3, selectedQuality;
 
     private Context context;
     private MainActivity mainActivity;
@@ -59,6 +61,8 @@ public class ChannelsFragment extends Fragment implements SearchView.OnQueryText
 
         context = getActivity();
         mainActivity = ((MainActivity) context);
+
+        selectedQuality = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString(AppConstants.QUALITY_PREFERENCE_KEY, "0"));
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             span = 5;
@@ -136,6 +140,7 @@ public class ChannelsFragment extends Fragment implements SearchView.OnQueryText
             contentValues.put(DatabaseContract.Favourites.CHANNEL_NAME, channelName);
             contentValues.put(DatabaseContract.Favourites.CHANNEL_VIDEO_URI, videoUri);
             contentValues.put(DatabaseContract.Favourites.CHANNEL_ICON_URI, iconUri);
+            contentValues.put(DatabaseContract.Favourites.QUALITY, selectedQuality);
             context.getContentResolver().insert(DatabaseContract.Favourites.CONTENT_URI, contentValues);
 
             mainActivity.refreshDrawer();

@@ -75,22 +75,18 @@ public class ChannelsRecyclerViewCursorAdapter extends RecyclerViewCursorAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_channels, parent, false);
-        ViewHolder vh = new ViewHolder(itemView);
-        // bad practice
-        vh.setIsRecyclable(false);
-        return vh;
+        return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
 
         viewHolder.tvItemsNo.setText(cursor.getString(ChannelsFragment.ChannelsQuery.CHANNEL_NAME));
+        viewHolder.ivItemsImage.setImageBitmap(null);
         String icon_uri = cursor.getString(ChannelsFragment.ChannelsQuery.CHANNEL_ICON_URI);
         if (!TextUtils.isEmpty(icon_uri)) {
-
-            viewHolder.ivItemsImage.setImageBitmap(null);
-            Picasso.with(viewHolder.ivItemsImage.getContext()).cancelRequest(viewHolder.ivItemsImage);
-            Picasso.with(viewHolder.ivItemsImage.getContext()).load(icon_uri).resize(0, UIUtils.convertToDip(mContext, 140)).into(viewHolder.ivItemsImage);
+            Picasso.with(mContext).cancelRequest(viewHolder.ivItemsImage);
+            Picasso.with(mContext).load(icon_uri).resize(0, UIUtils.convertToDip(mContext, 140)).into(viewHolder.ivItemsImage);
         }
     }
 }
