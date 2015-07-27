@@ -17,6 +17,9 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.PendingRequestListener;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
+
 import rs.multitelekom.dtv2go.R;
 import rs.multitelekom.dtv2go.ui.BaseActivity;
 import rs.multitelekom.dtv2go.ui.MainActivity;
@@ -114,7 +117,16 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
+
             etPassword.setText("");
+
+            if (spiceException.getCause() instanceof HttpClientErrorException) {
+                HttpClientErrorException exception = (HttpClientErrorException) spiceException.getCause();
+                if (exception.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
+                    DialogUtils.showBasicInfoDialog(LoginActivity.this, R.string.error_title, "Pogrešno korisničko ime i/ili lozinka.");
+                    return;
+                }
+            }
             DialogUtils.showBasicInfoDialog(LoginActivity.this, R.string.error_title, spiceException.getMessage());
         }
 
@@ -129,7 +141,7 @@ public class LoginActivity extends BaseActivity {
                         Device1 device1 = devices.getDevice1();
                         Device2 device2 = devices.getDevice2();
                         Device3 device3 = devices.getDevice3();
-                        if (device1 != null && device2 != null && device3 != null) { // TODO check returned data
+                        if (device1 != null && device2 != null && device3 != null) {
 
                             String dev1Id = device1.getId();
                             String dev2Id = device2.getId();

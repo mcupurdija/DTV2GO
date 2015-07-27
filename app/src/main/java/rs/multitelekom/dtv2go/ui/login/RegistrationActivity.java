@@ -11,6 +11,9 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.PendingRequestListener;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
+
 import rs.multitelekom.dtv2go.R;
 import rs.multitelekom.dtv2go.ui.BaseActivity;
 import rs.multitelekom.dtv2go.ui.MainActivity;
@@ -75,6 +78,15 @@ public class RegistrationActivity extends BaseActivity {
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
+
+            // TODO
+            if (spiceException.getCause() instanceof HttpClientErrorException) {
+                HttpClientErrorException exception = (HttpClientErrorException) spiceException.getCause();
+                if (exception.getStatusCode().equals(HttpStatus.ACCEPTED)) {
+                    startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                    return;
+                }
+            }
             DialogUtils.showBasicInfoDialog(RegistrationActivity.this, R.string.error_title, spiceException.getMessage());
         }
 
