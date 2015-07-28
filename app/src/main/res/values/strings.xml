@@ -27,11 +27,6 @@
         <item>@drawable/ic_info</item>
     </array>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_test_video">TestVideoActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-
     <string name="logo_desc">Sat-Trakt</string>
     <string name="username_hint">korisničko ime</string>
     <string name="password_hint">lozinka</string>
@@ -58,6 +53,8 @@
     <string name="error_title">Greška</string>
     <string name="error_username_required">Potrebno je da unesete korisničko ime!</string>
     <string name="error_password_required">Potrebno je da unesete lozinku!</string>
+    <string name="error_bad_username">Uneli ste nepostojeće korisničko ime.</string>
+    <string name="error_bad_password">Uneli ste pogrešnu lozinku, molimo pokušajte ponovo.</string>
     <string name="error_all_accounts_used">Iskoristili se sva tri dostupna naloga!</string>
     <string name="error_login_disabled">Vaš pristup je onemogućen. Kontaktiraje korisnički servis.</string>
     <string name="error_login_invalid">Uneti podaci nisu validni.</string>

@@ -55,6 +55,7 @@ public class RegistrationActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 PutRegistrationRequest putRegistrationRequest = new PutRegistrationRequest(username, new Registration(password, devId, "android", "new", "1"));
+                putRegistrationRequest.setRetryPolicy(null);
                 getSpiceManager().execute(putRegistrationRequest, PutRegistrationRequest.class.getSimpleName(), DurationInMillis.ONE_MINUTE, new PutRegistrationRequestListener());
             }
         });
@@ -79,7 +80,6 @@ public class RegistrationActivity extends BaseActivity {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
 
-            // TODO
             if (spiceException.getCause() instanceof HttpClientErrorException) {
                 HttpClientErrorException exception = (HttpClientErrorException) spiceException.getCause();
                 if (exception.getStatusCode().equals(HttpStatus.ACCEPTED)) {

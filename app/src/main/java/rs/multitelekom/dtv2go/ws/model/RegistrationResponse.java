@@ -12,14 +12,33 @@ import java.util.Map;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonPropertyOrder({
+        "status",
         "error"
 })
 public class RegistrationResponse {
 
+    @JsonProperty("status")
+    private String status;
     @JsonProperty("error")
     private String error;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    /**
+     * @return The status
+     */
+    @JsonProperty("status")
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status The status
+     */
+    @JsonProperty("status")
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     /**
      * @return The error

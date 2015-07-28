@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +18,6 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.PendingRequestListener;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import rs.multitelekom.dtv2go.R;
@@ -73,6 +73,7 @@ public class LoginActivity extends BaseActivity {
                 }
 
                 GetLoginRequest getLoginRequest = new GetLoginRequest(username, password);
+                getLoginRequest.setRetryPolicy(null);
                 getSpiceManager().execute(getLoginRequest, GetLoginRequest.class.getSimpleName(), DurationInMillis.ONE_MINUTE, new GetLoginRequestListener());
             }
         });
@@ -98,6 +99,7 @@ public class LoginActivity extends BaseActivity {
             }
             SharedPreferencesUtils.saveDevId(this, devId);
         }
+        Log.d("Login", devId);
 
         String savedUsername = SharedPreferencesUtils.getUserId(this);
         if (savedUsername != null) {
@@ -118,14 +120,24 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
 
-            etPassword.setText("");
-
             if (spiceException.getCause() instanceof HttpClientErrorException) {
                 HttpClientErrorException exception = (HttpClientErrorException) spiceException.getCause();
-                if (exception.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
-                    DialogUtils.showBasicInfoDialog(LoginActivity.this, R.string.error_title, "Pogrešno korisničko ime i/ili lozinka.");
-                    return;
+                switch (exception.getStatusCode()) {
+                    case FORBIDDEN:
+                        DialogUtils.showBasicInfoDialog(LoginActivity.this, R.string.error_title, R.string.error_bad_password);
+                        etPassword.setText("");
+                        etPassword.requestFocus();
+                        break;
+                    case BAD_REQUEST:
+                        DialogUtils.showBasicInfoDialog(LoginActivity.this, R.string.error_title, R.string.error_bad_username);
+                        etUsername.setText("");
+                        etPassword.setText("");
+                        etUsername.requestFocus();
+                        break;
+                    default:
+                        break;
                 }
+                return;
             }
             DialogUtils.showBasicInfoDialog(LoginActivity.this, R.string.error_title, spiceException.getMessage());
         }
