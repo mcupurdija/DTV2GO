@@ -36,7 +36,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         ListView list = (ListView) view.findViewById(android.R.id.list);
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) list.getLayoutParams();
-        marginLayoutParams.setMargins(0, 144, 0, 0);
+        marginLayoutParams.setMargins(0, 128, 0, 0);
         list.setLayoutParams(marginLayoutParams);
 
         Preference updateData = findPreference(AppConstants.UPDATE_DATA_PREFERENCE_KEY);
